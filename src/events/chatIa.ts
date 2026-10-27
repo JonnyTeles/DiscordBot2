@@ -13,6 +13,12 @@ export default (client: Client) => {
       .trim();
 
     if (!content) return;
+    if (message.attachments.size > 0) return;
+
+    if (message.channel.isTextBased() && "sendTyping" in message.channel) {
+      await message.channel.sendTyping();
+    }
+
     const response = await dm.sendMessage(
       `${message.author.displayName} diz: ${content}`,
     );
@@ -25,7 +31,7 @@ export default (client: Client) => {
       )
       .catch(async (err) => {
         console.error(err);
-        await message.reply(`Deu um erro aqui.`);
+        await message.reply("Deu um erro aqui.");
       });
   });
 };
